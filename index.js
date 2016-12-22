@@ -1,36 +1,69 @@
 var _ = require('lodash');
 
-var attr1Arr = [
-    { name: '野熊', attr: '力量' },
-    { name: '灵蛇', attr: '敏捷' },
-    { name: '猫头鹰', attr: '智力' }
+var attrArr = [
+    { level: 1, name: '野熊', attr: '力量', value: 5 },
+    { level: 1, name: '灵蛇', attr: '敏捷', value: 5 },
+    { level: 1, name: '长者', attr: '智力', value: 5 },
+    { level: 1, name: '精准', attr: '命中', value: 15 },
+    { level: 1, name: '迅捷', attr: '闪避', value: 15 },
+    { level: 1, name: '暴风', attr: '暴击', value: 15 },
+
+    { level: 2, name: '野熊', attr: '力量', value: 10 },
+    { level: 2, name: '灵蛇', attr: '敏捷', value: 10 },
+    { level: 2, name: '长者', attr: '智力', value: 10 },
+    { level: 2, name: '精准', attr: '命中', value: 30 },
+    { level: 2, name: '迅捷', attr: '闪避', value: 30 },
+    { level: 2, name: '暴风', attr: '暴击', value: 30 },
+
+    { level: 3, name: '野熊', attr: '力量', value: 15 },
+    { level: 3, name: '灵蛇', attr: '敏捷', value: 15 },
+    { level: 3, name: '长者', attr: '智力', value: 15 },
+    { level: 3, name: '精准', attr: '命中', value: 45 },
+    { level: 3, name: '迅捷', attr: '闪避', value: 45 },
+    { level: 3, name: '暴风', attr: '暴击', value: 45 },
 ];
-var attr2Arr = [
-    { name: '精准', attr: '命中' },
-    { name: '迅捷', attr: '闪避' },
-    { name: '苜蓿', attr: '暴击' }
-];
+
 var qualityArr = [
-    { name: '稀有', attr: '蓝色', ratio: 1.1 },
-    { name: '史诗', attr: '紫色', ratio: 1.3 },
-    { name: '传说', attr: '橙色', ratio: 1.5 }
+    { name: '稀有', color: '蓝色', attrCount: 1 },
+    { name: '史诗', color: '紫色', attrCount: 2 },
+    { name: '传说', color: '橙色', attrCount: 3 }
 ];
-var levelArr = [
-    { level: 1, attr1: 10, attr2: 5 },
-    { level: 2, attr1: 30, attr2: 10 },
-    { level: 3, attr1: 50, attr2: 15 }
+var baseArr = [
+    { level: 1, type: '剑', minDamage: 13, maxDamage: 15 },
+    { level: 1, type: '斧', minDamage: 10, maxDamage: 22 },
+    { level: 1, type: '锤', minDamage: 8, maxDamage: 26 },
+
+    { level: 2, type: '剑', minDamage: 22, maxDamage: 26 },
+    { level: 2, type: '斧', minDamage: 18, maxDamage: 35 },
+    { level: 2, type: '锤', minDamage: 14, maxDamage: 39 },
+
+    { level: 3, type: '剑', minDamage: 32, maxDamage: 38 },
+    { level: 3, type: '斧', minDamage: 28, maxDamage: 48 },
+    { level: 3, type: '锤', minDamage: 23, maxDamage: 59 },
 ];
+var types = ['剑', '斧', '锤'];
 
 function gen() {
-    var attr1 = attr1Arr[_.random(2)];
-    var attr2 = attr2Arr[_.random(2)];
-    var quality = qualityArr[_.random(2)];
-    var level = levelArr[_.random(2)];
+    var level = _.sample([1, 2, 3]);
+    var quality = _.sample(qualityArr);
+    var type = _.sample(types);
+    var base = _.find(baseArr, function (x) {
+        return x.type == type && x.level == level;
+    });
+    var attrPool = _.filter(attrArr, function (x) {
+        return x.level == level;
+    });
+    var specialProperties = _.sampleSize(attrPool, quality.attrCount);
 
-    var name = attr1.name + attr2.name + "-" + quality.name + " " + level.level + "级";
-    var attr = attr1.attr + " +" + level.attr1 * quality.ratio + " " + attr2.attr + " +" + level.attr2 * quality.ratio;
+    var name = "";
+    var remark = "等级 " + level + "\n伤害" + base.minDamage + "-" + base.maxDamage + "\n";
+    _.forEach(specialProperties, function (property) {
+        name = name + property.name;
+        remark = remark + property.attr + " +" + property.value + "\n";
+    });
+    name = name + "之" + base.type;
 
-    console.log(name, attr);
+    console.log(name + "\n" + remark);
 }
 
 _.times(10, gen);

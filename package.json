@@ -4,12 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start":"node index.js",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Chris",
   "license": "MIT",
   "dependencies": {
-    "lodash":"latest"
+    "lodash": "^4.17.2"
   }
 }
